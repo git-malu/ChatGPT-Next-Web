@@ -21,8 +21,11 @@ async function handle(
   req: NextRequest,
   { params }: { params: { provider: string; path: string[] } },
 ) {
+  console.error(
+    `[Generic Route] provider=${params.provider} path=${params.path.join("/")} method=${req.method}`,
+  );
   const apiPath = `/api/${params.provider}`;
-  console.log(`[${params.provider} Route] params `, params);
+  console.error(`[${params.provider} Route] params `, params);
   switch (apiPath) {
     case ApiPath.Azure:
       return azureHandler(req, { params });
@@ -63,7 +66,7 @@ async function handle(
 export const GET = handle;
 export const POST = handle;
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const preferredRegion = [
   "arn1",
   "bom1",

@@ -9,6 +9,7 @@ const serverConfig = getServerSideConfig();
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
+  console.log("[Common OpenAI Request] entered");
 
   const isAzure = req.nextUrl.pathname.includes("azure/deployments");
 
@@ -121,7 +122,7 @@ export async function requestOpenai(req: NextRequest) {
       };
 
       if (serverConfig.logUserMessage && jsonBody?.messages) {
-        console.log(
+        console.error(
           `[User Message] model=${jsonBody.model} messages=`,
           prettyObject(jsonBody.messages),
         );

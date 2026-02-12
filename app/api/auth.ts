@@ -26,6 +26,9 @@ function parseApiKey(bearToken: string) {
 
 export function auth(req: NextRequest, modelProvider: ModelProvider) {
   const authToken = req.headers.get("Authorization") ?? "";
+  console.error(
+    `[Auth] checking token for ${modelProvider} from ${getIP(req)}`,
+  );
 
   // check if it is openai api key or user token
   const { accessCode, apiKey } = parseApiKey(authToken);

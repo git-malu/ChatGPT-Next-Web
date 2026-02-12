@@ -22,6 +22,7 @@ declare global {
 }
 
 async function handle() {
+  console.log("[Config Route] serving config");
   return NextResponse.json(DANGER_CONFIG);
 }
 
