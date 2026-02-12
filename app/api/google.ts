@@ -10,7 +10,10 @@ export async function handle(
   req: NextRequest,
   { params }: { params: { provider: string; path: string[] } },
 ) {
-  console.log("[Google Route] params ", params);
+  const config = getServerSideConfig();
+  console.log(
+    `[Google Route] params=${JSON.stringify(params)} method=${req.method}`,
+  );
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });

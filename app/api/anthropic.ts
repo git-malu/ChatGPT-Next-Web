@@ -18,7 +18,10 @@ export async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[Anthropic Route] params ", params);
+  const config = getServerSideConfig();
+  console.log(
+    `[Anthropic Route] params=${JSON.stringify(params)} method=${req.method}`,
+  );
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });

@@ -181,6 +181,14 @@ export const getServerSideConfig = () => {
     process.env.WHITE_WEBDAV_ENDPOINTS ?? ""
   ).split(",");
 
+  const logUserMessage =
+    process.env.LOG_USER_MESSAGE === "true" ||
+    process.env.LOG_USER_MESSAGE === "1";
+
+  if (logUserMessage) {
+    console.log("[Server Config] User message logging is enabled.");
+  }
+
   return {
     baseUrl: process.env.BASE_URL,
     apiKey: getApiKey(process.env.OPENAI_API_KEY),
@@ -275,6 +283,6 @@ export const getServerSideConfig = () => {
     visionModels,
     allowedWebDavEndpoints,
     enableMcp: process.env.ENABLE_MCP === "true",
-    logUserMessage: process.env.LOG_USER_MESSAGE === "true",
+    logUserMessage,
   };
 };
