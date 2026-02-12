@@ -94,6 +94,7 @@ declare global {
 
       // custom template for preprocessing user input
       DEFAULT_INPUT_TEMPLATE?: string;
+      LOG_USER_MESSAGE?: string;
 
       ENABLE_MCP?: string; // enable mcp functionality
     }
@@ -274,5 +275,6 @@ export const getServerSideConfig = () => {
     visionModels,
     allowedWebDavEndpoints,
     enableMcp: process.env.ENABLE_MCP === "true",
+    logUserMessage: process.env.LOG_USER_MESSAGE === "true",
   };
 };

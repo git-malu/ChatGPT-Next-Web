@@ -80,15 +80,26 @@ async function request(req: NextRequest) {
   };
 
   // #1815 try to refuse some request to some models
-  if (serverConfig.customModels && req.body) {
+  if (req.body) {
     try {
       const clonedBody = await req.text();
       fetchOptions.body = clonedBody;
 
-      const jsonBody = JSON.parse(clonedBody) as { model?: string };
+      const jsonBody = JSON.parse(clonedBody) as {
+        model?: string;
+        messages?: Array<{ role: string; content: string }>;
+      };
+
+      if (serverConfig.logUserMessage && jsonBody?.messages) {
+        console.log(
+          `[User Message] model=${jsonBody.model} messages=`,
+          prettyObject(jsonBody.messages),
+        );
+      }
 
       // not undefined and is false
       if (
+        serverConfig.customModels &&
         isModelNotavailableInServer(
           serverConfig.customModels,
           jsonBody?.model as string,

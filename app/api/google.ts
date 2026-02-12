@@ -114,6 +114,26 @@ async function request(req: NextRequest, apiKey: string) {
     signal: controller.signal,
   };
 
+  if (req.body) {
+    try {
+      const clonedBody = await req.text();
+      fetchOptions.body = clonedBody;
+
+      const jsonBody = JSON.parse(clonedBody) as {
+        contents?: Array<{ role: string; parts: any }>;
+      };
+
+      if (serverConfig.logUserMessage && jsonBody?.contents) {
+        console.log(
+          `[User Message] model=google messages=`,
+          prettyObject(jsonBody.contents),
+        );
+      }
+    } catch (e) {
+      console.error("[Google] log error", e);
+    }
+  }
+
   try {
     const res = await fetch(fetchUrl, fetchOptions);
     // to prevent browser prompt for credentials

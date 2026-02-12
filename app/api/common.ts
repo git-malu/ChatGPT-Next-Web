@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { OPENAI_BASE_URL, ServiceProvider } from "../constant";
+import { prettyObject } from "../utils/format";
 import { cloudflareAIGatewayUrl } from "../utils/cloudflare";
 import { getModelProvider, isModelNotavailableInServer } from "../utils/model";
 
@@ -109,15 +110,26 @@ export async function requestOpenai(req: NextRequest) {
   };
 
   // #1815 try to refuse gpt4 request
-  if (serverConfig.customModels && req.body) {
+  if (req.body) {
     try {
       const clonedBody = await req.text();
       fetchOptions.body = clonedBody;
 
-      const jsonBody = JSON.parse(clonedBody) as { model?: string };
+      const jsonBody = JSON.parse(clonedBody) as {
+        model?: string;
+        messages?: Array<{ role: string; content: string }>;
+      };
+
+      if (serverConfig.logUserMessage && jsonBody?.messages) {
+        console.log(
+          `[User Message] model=${jsonBody.model} messages=`,
+          prettyObject(jsonBody.messages),
+        );
+      }
 
       // not undefined and is false
       if (
+        serverConfig.customModels &&
         isModelNotavailableInServer(
           serverConfig.customModels,
           jsonBody?.model as string,
